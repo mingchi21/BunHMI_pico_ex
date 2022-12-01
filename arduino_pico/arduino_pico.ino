@@ -44,6 +44,14 @@ void setup() {
   Serial1.setTimeout(10);
 
   timer.every(1, timer_tick);
+
+  // clear serial rx buffer
+  delay(100);
+  char buff[256];
+  int rxlen;
+  do{
+    rxlen = Serial1.readBytes(buff, sizeof(buff));
+  }while(rxlen > 0);  
 }
 
 /**
