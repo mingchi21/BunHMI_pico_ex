@@ -13,17 +13,21 @@ Servo myservo;  // create servo object to control a servo
 * timer tick call back
 */
 bool timer_tick(void*) {
+  char buff[256];
+
   static int sec_tick_cnt = 0;
   static int test_cnt = 0;
   if (++sec_tick_cnt >= 1000) {
     // 1 Sec
     sec_tick_cnt = 0;
-    Serial1.printf("lab.text(\"Timer:%d\")\x04", test_cnt++);
+    snprintf(buff, sizeof(buff),"lab.text(\"Timer:%d\")\x04", test_cnt++);
+    Serial1.print(buff);
   }
   if ((sec_tick_cnt % 100) == 0) {
     // 100ms
     int sensorValue = (analogRead(A0) * 100) / 1024;
-    Serial1.printf("bar.val(%d,1)", sensorValue);    
+    snprintf(buff,  sizeof(buff), "bar.val(%d,1)", sensorValue);
+    Serial1.print(buff);    
     Serial1.write(EOT);
   }
   return true;
