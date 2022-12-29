@@ -48,7 +48,8 @@ void setup() {
   Serial1.setTimeout(10);
 
   timer.every(1, timer_tick);
-
+  // Send dummy cmd, to clear HMI Rx Buffer
+  Serial1.print("\x04\x04");
   // clear serial rx buffer
   delay(100);
   char buff[256];
