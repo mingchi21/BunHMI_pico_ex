@@ -48,9 +48,9 @@ void setup() {
   Serial1.setTimeout(10);
 
   timer.every(1, timer_tick);
-  // Send dummy cmd, to clear HMI Rx Buffer
+  // Send dummy cmd, to clear rx buffer HMI
   Serial1.print("\x04\x04");
-  // clear serial rx buffer
+  // clear serial rx buffer of pico
   delay(100);
   char buff[256];
   int rxlen;
@@ -98,6 +98,7 @@ int rxHmiData(char* dat, int dat_len) {
   return 0;
 }
 
+// String from BunHMI ptr cmd
 const char* LED_ = "LED:";
 const char* SLI_ = "SLI:";
 void handleHmiData(const char* dat) {
