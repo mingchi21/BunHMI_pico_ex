@@ -20,13 +20,13 @@ bool timer_tick(void*) {
   if (++sec_tick_cnt >= 1000) {
     // 1 Sec
     sec_tick_cnt = 0;
-    snprintf(buff, sizeof(buff),"lab.text(\"Timer:%d\")\x04", test_cnt++);
+    snprintf(buff, sizeof(buff),"lab.text(\"Timer:%d\");\x04", test_cnt++);
     Serial1.print(buff);
   }
   if ((sec_tick_cnt % 100) == 0) {
     // 100ms
     int sensorValue = (analogRead(A0) * 100) / 1024;
-    snprintf(buff,  sizeof(buff), "bar.val(%d,1)", sensorValue);
+    snprintf(buff,  sizeof(buff), "bar.val(%d,1);", sensorValue);
     Serial1.print(buff);    
     Serial1.write(EOT);
   }
