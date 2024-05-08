@@ -72,9 +72,11 @@ int rxHmiData(char* dat, int dat_len) {
     return 0;
   }
   int rxlen = Serial1.readBytes(dat, dat_len);
-  dat[rxlen-1] = 0; // Replace 0x04(EOT) to 0
-  return rxlen-1;
-
+  if(rxlen > 0){
+    dat[rxlen-1] = 0; // Replace 0x04(EOT) to 0
+    return rxlen;
+  }
+  return 0;
 }
 
 // String from BunHMI ptr cmd
