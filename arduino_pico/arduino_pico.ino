@@ -68,34 +68,13 @@ void setup() {
   *  length of rx bytes
 */
 int rxHmiData(char* dat, int dat_len) {
-  static char hmiBuff[256];
-  static uint8_t hmiBuffLen = 0;  
-
   if (!Serial1.available()) {
     return 0;
   }
-  int rxlen = Serial1.readBytes(hmiBuff + hmiBuffLen, sizeof(hmiBuff) - hmiBuffLen);
-  int i;
-  hmiBuffLen += rxlen;
-  for (i = hmiBuffLen - 1; i >= 0; i--) {
-    if (hmiBuff[i] == EOT) {
-      // Got EOT Byte
-      hmiBuff[i++] = 0;  // Change EOT to NULL,  string  terminate
-      int hmi_len = (i < dat_len) ? i : dat_len;
-      // Copy hmiBuff to dat
-      memcpy(dat, hmiBuff, hmi_len);
-      // Move remain data to the head of hmiBuff
-      int remain_len = 0;
-      while (i < hmiBuffLen) {
-        hmiBuff[remain_len] = hmiBuff[i];
-        remain_len++;
-        i++;
-      }
-      hmiBuffLen = remain_len;
-      return hmi_len;
-    }
-  }
-  return 0;
+  int rxlen = Serial1.readBytes(dat, dat_len);
+  dat[rxlen-1] = 0; // Replace 0x04(EOT) to 0
+  return rxlen-1;
+
 }
 
 // String from BunHMI ptr cmd
@@ -109,7 +88,7 @@ void handleHmiData(const char* dat) {
     return;
   }
   if (strncmp(dat, SLI_, strlen(SLI_)) == 0) {
-    val = strtoul(dat + strlen(LED_), NULL, 0);    
+    val = strtoul(dat + strlen(SLI_), NULL, 0);        
     int servo = map(val, 0, 100, 0, 180);     // scale it to use it with the servo (value between 0 and 180)    
     myservo.write(servo);           
     return;
